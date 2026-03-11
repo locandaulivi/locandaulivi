@@ -7,6 +7,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="../css/style.css"/>
+  <style>
+    .g-slot { display: none; }
+    .g-slot.loaded { display: block; }
+    .g-empty {
+      text-align: center; padding: 3rem; color: var(--text-light);
+      grid-column: 1/-1;
+    }
+    .g-empty span { font-size: 2.5rem; display: block; margin-bottom: 0.5rem; }
+    .g-empty small { font-size: 0.82rem; }
+  </style>
 </head>
 <body>
 <aside id="left-sidebar"></aside>
@@ -24,6 +34,7 @@
         <button class="gtab active" data-g="interno">Interno</button>
         <button class="gtab" data-g="esterno">Esterno</button>
         <button class="gtab" data-g="piatti">I Piatti</button>
+        <button class="gtab" data-g="dolci">Dolci</button>
         <button class="gtab" data-g="vini">I Vini</button>
       </div>
 
@@ -44,36 +55,15 @@
 <script src="../js/data.js"></script>
 <script src="../js/layout.js"></script>
 <script>
-// Cartelle delle foto — aggiungi nomi file qui quando hai le foto
-// oppure mettile nelle cartelle e il sito le mostrerà automaticamente
-const FOTO_CARTELLE = {
-  interno: [
-    { src: '../images/interno/foto1.jpg', alt: 'Interno 1' },
-    { src: '../images/interno/foto2.jpg', alt: 'Interno 2' },
-    { src: '../images/interno/foto3.jpg', alt: 'Interno 3' },
-    { src: '../images/interno/foto4.jpg', alt: 'Interno 4' },
-  ],
-  esterno: [
-    { src: '../images/esterno/foto1.jpg', alt: 'Esterno 1' },
-    { src: '../images/esterno/foto2.jpg', alt: 'Esterno 2' },
-    { src: '../images/esterno/foto3.jpg', alt: 'Esterno 3' },
-  ],
-  piatti: [
-    { src: '../images/piatti/foto1.jpg', alt: 'Piatto 1' },
-    { src: '../images/piatti/foto2.jpg', alt: 'Piatto 2' },
-    { src: '../images/piatti/foto3.jpg', alt: 'Piatto 3' },
-    { src: '../images/piatti/foto4.jpg', alt: 'Piatto 4' },
-    { src: '../images/piatti/foto5.jpg', alt: 'Piatto 5' },
-    { src: '../images/piatti/foto6.jpg', alt: 'Piatto 6' },
-  ],
-  vini: [
-    { src: '../images/vini/foto1.jpg', alt: 'Vino 1' },
-    { src: '../images/vini/foto2.jpg', alt: 'Vino 2' },
-    { src: '../images/vini/foto3.jpg', alt: 'Vino 3' },
-  ]
-};
+const MAX_FOTO = 20;
 
-let currentCat = 'interno';
+const CARTELLE = {
+  interno: { label: 'Interno',  path: '../images/interno/' },
+  esterno: { label: 'Esterno',  path: '../images/esterno/' },
+  piatti:  { label: 'I Piatti', path: '../images/piatti/'  },
+  dolci:   { label: 'Dolci',    path: '../images/dolci/'   },
+  vini:    { label: 'I Vini',   path: '../images/vini/'    }
+};
 
 document.addEventListener('DOMContentLoaded', () => {
   buildLayout('galleria');
@@ -83,53 +73,62 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.gtab').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      currentCat = btn.dataset.g;
-      renderGalleria(currentCat);
+      renderGalleria(btn.dataset.g);
     });
   });
 
   document.getElementById('lb-close').addEventListener('click', closeLb);
   document.getElementById('lb-bg').addEventListener('click', closeLb);
-  document.addEventListener('keydown', e => { if(e.key==='Escape') closeLb(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
 });
 
 function renderGalleria(cat) {
-  const photos = FOTO_CARTELLE[cat] || [];
   const grid = document.getElementById('g-grid');
-  let html = '';
-  let hasAny = false;
+  const cartella = CARTELLE[cat];
+  if (!cartella) return;
 
-  photos.forEach(ph => {
-    html += `
-      <div class="g-slot" data-src="${ph.src}" data-alt="${ph.alt}">
-        <img src="${ph.src}" alt="${ph.alt}"
-             onerror="this.parentElement.style.display='none'"/>
-      </div>`;
-    hasAny = true;
-  });
+  grid.innerHTML = '';
+  let totalErrors = 0;
 
-  if (!hasAny) {
-    html = `
-      <div class="g-ph">📷<span>Carica le foto in images/${cat}/</span></div>
-      <div class="g-ph">📷<span>Rinomina: foto1.jpg, foto2.jpg…</span></div>
-      <div class="g-ph">📷<span>Poi ricarica la pagina</span></div>
-    `;
-  }
+  for (let i = 1; i <= MAX_FOTO; i++) {
+    const slot = document.createElement('div');
+    slot.className = 'g-slot';
 
-  grid.innerHTML = html;
+    const img = document.createElement('img');
+    img.alt = cartella.label + ' ' + i;
+    img.loading = 'lazy';
 
-  // Lightbox click
-  grid.querySelectorAll('.g-slot').forEach(slot => {
-    slot.addEventListener('click', () => {
-      const img = slot.querySelector('img');
-      if (img) {
-        document.getElementById('lb-img').src = slot.dataset.src;
-        document.getElementById('lb-img').alt = slot.dataset.alt;
+    img.onload = () => {
+      slot.classList.add('loaded');
+      const empty = grid.querySelector('.g-empty');
+      if (empty) empty.remove();
+      slot.addEventListener('click', () => {
+        document.getElementById('lb-img').src = img.src;
+        document.getElementById('lb-img').alt = img.alt;
         document.getElementById('lightbox').classList.add('active');
         document.body.style.overflow = 'hidden';
+      });
+    };
+
+    img.onerror = () => {
+      slot.remove();
+      totalErrors++;
+      if (totalErrors === MAX_FOTO) {
+        if (!grid.querySelector('.g-empty')) {
+          grid.innerHTML = `
+            <div class="g-empty">
+              <span>📷</span>
+              <p>Nessuna foto ancora in questa categoria.</p>
+              <small>Carica le foto rinominandole <strong>foto1.jpg</strong>, <strong>foto2.jpg</strong>… nella cartella <strong>images/${cat}/</strong></small>
+            </div>`;
+        }
       }
-    });
-  });
+    };
+
+    img.src = cartella.path + 'foto' + i + '.jpg';
+    slot.appendChild(img);
+    grid.appendChild(slot);
+  }
 }
 
 function closeLb() {
