@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dove Siamo – Locanda Ulivi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/style.css"/>
+</head>
+<body>
+<aside id="left-sidebar"></aside>
+<div id="page-content">
+  <nav id="navbar"></nav>
+
+  <section class="section section-green" style="flex:1">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Come Raggiungerci</span>
+        <h2>Dove <em>Siamo</em></h2>
+      </div>
+      <div class="dove-grid reveal">
+        <div class="dove-info">
+          <div class="dove-row"><span>📍</span><div><strong>Località Alpi 3</strong><br/>37010 Cavaion Veronese (VR), Italia</div></div>
+          <div class="dove-row"><span>📞</span><div><a href="tel:+390450000000" id="d-tel">+39 045 000 0000</a></div></div>
+          <div class="dove-row"><span>✉️</span><div><a href="mailto:locandaulivi2026@gmail.com" id="d-email">locandaulivi2026@gmail.com</a></div></div>
+
+          <div class="indicazioni-box">
+            <h4>🚗 Calcola il percorso</h4>
+            <p>Inserisci la tua posizione di partenza:</p>
+            <div class="ind-form">
+              <input type="text" id="partenza-input" placeholder="Es: Via Roma 1, Verona"/>
+              <button class="btn-primary small" id="btn-indicazioni">Vai!</button>
+            </div>
+            <a href="https://maps.app.goo.gl/huveCtTqLNtj6pEF9" target="_blank" rel="noopener" class="link-gmaps">
+              📌 Apri direttamente su Google Maps
+            </a>
+          </div>
+
+          <div class="come-arrivare">
+            <h4>Come arrivare</h4>
+            <ul>
+              <li><span>🚗</span><div><strong>In auto:</strong> A22, uscita Affi – seguire per Cavaion Veronese (circa 8 km)</div></li>
+              <li><span>🚂</span><div><strong>In treno:</strong> Stazione Peschiera del Garda, poi taxi o bus locale</div></li>
+              <li><span>✈️</span><div><strong>In aereo:</strong> Aeroporto Verona Villafranca, circa 20 min in auto</div></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mappa-wrap">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2796.0!2d10.7290!3d45.5490!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47819b99fc3e3cbb%3A0x0!2sLocalit%C3%A0%20Alpi%2C%2037010%20Cavaion%20Veronese%20VR!5e0!3m2!1sit!2sit!4v1700000000000!5m2!1sit!2sit"
+            width="100%" height="420" style="border:0;" allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade" title="Mappa Locanda Ulivi">
+          </iframe>
+          <a href="https://maps.app.goo.gl/huveCtTqLNtj6pEF9" target="_blank" rel="noopener" class="mappa-btn-ext">
+            🗺️ Apri in Google Maps
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer id="footer"></footer>
+</div>
+
+<script src="../js/data.js"></script>
+<script src="../js/layout.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  buildLayout('dove-siamo');
+  const r = SDATA.ristorante;
+  document.getElementById('d-tel').textContent   = r.telefono;
+  document.getElementById('d-tel').href          = 'tel:' + r.telefono.replace(/\s/g,'');
+  document.getElementById('d-email').textContent = r.email;
+  document.getElementById('d-email').href        = 'mailto:' + r.email;
+
+  const destination = 'Località+Alpi+3,+37010+Cavaion+Veronese+VR,+Italia';
+  document.getElementById('btn-indicazioni').addEventListener('click', openDir);
+  document.getElementById('partenza-input').addEventListener('keydown', e => { if(e.key==='Enter') openDir(); });
+  function openDir() {
+    const from = document.getElementById('partenza-input').value.trim();
+    const url = from
+      ? `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(from)}&destination=${destination}&travelmode=driving`
+      : 'https://maps.app.goo.gl/huveCtTqLNtj6pEF9';
+    window.open(url, '_blank', 'noopener');
+  }
+});
+</script>
+</body>
+</html>

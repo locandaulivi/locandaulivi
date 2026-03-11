@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Menu – Locanda Ulivi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/style.css"/>
+</head>
+<body>
+<aside id="left-sidebar"></aside>
+<div id="page-content">
+  <nav id="navbar"></nav>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">La Nostra Cucina</span>
+        <h2>Il <em>Menu</em></h2>
+        <p>Piatti della tradizione veronese con ingredienti locali e di stagione</p>
+      </div>
+      <div class="menu-tabs" id="menu-tabs">
+        <button class="tab active" data-cat="antipasti">Antipasti</button>
+        <button class="tab" data-cat="primi">Primi</button>
+        <button class="tab" data-cat="secondi">Secondi</button>
+        <button class="tab" data-cat="contorni">Contorni</button>
+        <button class="tab" data-cat="dolci">Dolci</button>
+      </div>
+      <div class="menu-grid" id="menu-grid"></div>
+    </div>
+  </section>
+
+  <footer id="footer"></footer>
+</div>
+
+<script src="../js/data.js"></script>
+<script src="../js/layout.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  buildLayout('menu');
+  renderMenu('antipasti');
+
+  document.getElementById('menu-tabs').addEventListener('click', e => {
+    if (e.target.classList.contains('tab')) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      e.target.classList.add('active');
+      renderMenu(e.target.dataset.cat);
+    }
+  });
+});
+
+function renderMenu(cat) {
+  const items = SDATA.menu[cat] || [];
+  document.getElementById('menu-grid').innerHTML = items.map(p => `
+    <div class="menu-card reveal">
+      <div class="mc-header">
+        <span class="mc-nome">${p.nome}</span>
+        <span class="mc-prezzo">€ ${p.prezzo}</span>
+      </div>
+      ${p.descrizione ? `<p class="mc-desc">${p.descrizione}</p>` : ''}
+    </div>
+  `).join('');
+  setTimeout(() => {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+  }, 50);
+}
+</script>
+</body>
+</html>

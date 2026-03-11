@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Orari – Locanda Ulivi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/style.css"/>
+</head>
+<body>
+<aside id="left-sidebar"></aside>
+<div id="page-content">
+  <nav id="navbar"></nav>
+
+  <section class="section section-green" style="flex:1">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Sempre a tua disposizione</span>
+        <h2>Orari <em>&amp; Pranzo di Lavoro</em></h2>
+      </div>
+      <div class="orari-grid reveal">
+        <div class="orari-card">
+          <h3>🕐 Orari di Apertura</h3>
+          <div class="or-row">
+            <span class="or-ico">☀️</span>
+            <div>
+              <strong id="or-pranzo-giorni"></strong>
+              <span class="or-time" id="or-pranzo-orario"></span>
+              <em>Pranzo</em>
+            </div>
+          </div>
+          <div class="or-row">
+            <span class="or-ico">🌙</span>
+            <div>
+              <strong id="or-cena-giorni"></strong>
+              <span class="or-time" id="or-cena-orario"></span>
+              <em>Cena</em>
+            </div>
+          </div>
+          <div class="or-chiusura">⛔ <span id="or-chiusura"></span></div>
+        </div>
+
+        <div class="pranzo-card">
+          <div class="pl-ribbon">🍽️ Dal Lunedì al Venerdì</div>
+          <h3 id="pl-titolo"></h3>
+          <div class="pl-prezzo" id="pl-prezzo"></div>
+          <p id="pl-descrizione"></p>
+          <ul class="pl-list" id="pl-incluso"></ul>
+          <p class="pl-note" id="pl-note"></p>
+          <a href="prenota.html" class="btn-primary">Prenota il Pranzo</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer id="footer"></footer>
+</div>
+
+<script src="../js/data.js"></script>
+<script src="../js/layout.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  buildLayout('orari');
+  const o = SDATA.orari;
+  const pl = SDATA.pranzo_lavoro;
+  document.getElementById('or-pranzo-giorni').textContent = o.pranzo.giorni;
+  document.getElementById('or-pranzo-orario').textContent = o.pranzo.orario;
+  document.getElementById('or-cena-giorni').textContent   = o.cena.giorni;
+  document.getElementById('or-cena-orario').textContent   = o.cena.orario;
+  document.getElementById('or-chiusura').textContent      = o.chiusura;
+  document.getElementById('pl-titolo').textContent        = pl.titolo;
+  document.getElementById('pl-prezzo').textContent        = pl.prezzo;
+  document.getElementById('pl-descrizione').textContent   = pl.descrizione;
+  document.getElementById('pl-note').textContent          = pl.note;
+  document.getElementById('pl-incluso').innerHTML = pl.incluso.map(i => `<li>✓ ${i}</li>`).join('');
+});
+</script>
+</body>
+</html>

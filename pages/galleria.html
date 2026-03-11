@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Galleria – Locanda Ulivi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/style.css"/>
+</head>
+<body>
+<aside id="left-sidebar"></aside>
+<div id="page-content">
+  <nav id="navbar"></nav>
+
+  <section class="section" style="flex:1">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Atmosfera</span>
+        <h2>La Nostra <em>Galleria</em></h2>
+      </div>
+
+      <div class="g-tabs">
+        <button class="gtab active" data-g="interno">Interno</button>
+        <button class="gtab" data-g="esterno">Esterno</button>
+        <button class="gtab" data-g="piatti">I Piatti</button>
+        <button class="gtab" data-g="vini">I Vini</button>
+      </div>
+
+      <div class="g-grid" id="g-grid"></div>
+    </div>
+  </section>
+
+  <footer id="footer"></footer>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <div class="lb-bg" id="lb-bg"></div>
+  <img src="" alt="" class="lb-img" id="lb-img"/>
+  <button class="lb-close" id="lb-close">✕</button>
+</div>
+
+<script src="../js/data.js"></script>
+<script src="../js/layout.js"></script>
+<script>
+// Cartelle delle foto — aggiungi nomi file qui quando hai le foto
+// oppure mettile nelle cartelle e il sito le mostrerà automaticamente
+const FOTO_CARTELLE = {
+  interno: [
+    { src: '../images/interno/foto1.jpg', alt: 'Interno 1' },
+    { src: '../images/interno/foto2.jpg', alt: 'Interno 2' },
+    { src: '../images/interno/foto3.jpg', alt: 'Interno 3' },
+    { src: '../images/interno/foto4.jpg', alt: 'Interno 4' },
+  ],
+  esterno: [
+    { src: '../images/esterno/foto1.jpg', alt: 'Esterno 1' },
+    { src: '../images/esterno/foto2.jpg', alt: 'Esterno 2' },
+    { src: '../images/esterno/foto3.jpg', alt: 'Esterno 3' },
+  ],
+  piatti: [
+    { src: '../images/piatti/foto1.jpg', alt: 'Piatto 1' },
+    { src: '../images/piatti/foto2.jpg', alt: 'Piatto 2' },
+    { src: '../images/piatti/foto3.jpg', alt: 'Piatto 3' },
+    { src: '../images/piatti/foto4.jpg', alt: 'Piatto 4' },
+    { src: '../images/piatti/foto5.jpg', alt: 'Piatto 5' },
+    { src: '../images/piatti/foto6.jpg', alt: 'Piatto 6' },
+  ],
+  vini: [
+    { src: '../images/vini/foto1.jpg', alt: 'Vino 1' },
+    { src: '../images/vini/foto2.jpg', alt: 'Vino 2' },
+    { src: '../images/vini/foto3.jpg', alt: 'Vino 3' },
+  ]
+};
+
+let currentCat = 'interno';
+
+document.addEventListener('DOMContentLoaded', () => {
+  buildLayout('galleria');
+  renderGalleria('interno');
+
+  document.querySelectorAll('.gtab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.gtab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentCat = btn.dataset.g;
+      renderGalleria(currentCat);
+    });
+  });
+
+  document.getElementById('lb-close').addEventListener('click', closeLb);
+  document.getElementById('lb-bg').addEventListener('click', closeLb);
+  document.addEventListener('keydown', e => { if(e.key==='Escape') closeLb(); });
+});
+
+function renderGalleria(cat) {
+  const photos = FOTO_CARTELLE[cat] || [];
+  const grid = document.getElementById('g-grid');
+  let html = '';
+  let hasAny = false;
+
+  photos.forEach(ph => {
+    html += `
+      <div class="g-slot" data-src="${ph.src}" data-alt="${ph.alt}">
+        <img src="${ph.src}" alt="${ph.alt}"
+             onerror="this.parentElement.style.display='none'"/>
+      </div>`;
+    hasAny = true;
+  });
+
+  if (!hasAny) {
+    html = `
+      <div class="g-ph">📷<span>Carica le foto in images/${cat}/</span></div>
+      <div class="g-ph">📷<span>Rinomina: foto1.jpg, foto2.jpg…</span></div>
+      <div class="g-ph">📷<span>Poi ricarica la pagina</span></div>
+    `;
+  }
+
+  grid.innerHTML = html;
+
+  // Lightbox click
+  grid.querySelectorAll('.g-slot').forEach(slot => {
+    slot.addEventListener('click', () => {
+      const img = slot.querySelector('img');
+      if (img) {
+        document.getElementById('lb-img').src = slot.dataset.src;
+        document.getElementById('lb-img').alt = slot.dataset.alt;
+        document.getElementById('lightbox').classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+    });
+  });
+}
+
+function closeLb() {
+  document.getElementById('lightbox').classList.remove('active');
+  document.body.style.overflow = '';
+}
+</script>
+</body>
+</html>

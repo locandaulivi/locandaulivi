@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chi Siamo – Locanda Ulivi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/style.css"/>
+</head>
+<body>
+<aside id="left-sidebar"></aside>
+<div id="page-content">
+  <nav id="navbar"></nav>
+
+  <section class="section" style="flex:1">
+    <div class="container">
+      <div class="chi-grid reveal">
+        <div class="chi-testo">
+          <span class="section-tag">La Nostra Storia</span>
+          <h2>Un angolo di <em>Verona</em> autentica</h2>
+          <p id="chi-desc"></p>
+          <div class="feats">
+            <div class="feat"><span>🍷</span><strong>Vini locali</strong></div>
+            <div class="feat"><span>🌿</span><strong>Prodotti del territorio</strong></div>
+            <div class="feat"><span>👨‍🍳</span><strong>Ricette tradizionali</strong></div>
+          </div>
+        </div>
+        <div class="chi-imgs">
+          <div class="chi-img-main">
+            <img src="../images/interno/foto1.jpg" alt="Interno"
+                 onerror="this.style.display='none';this.parentElement.querySelector('.img-ph').style.display='flex'"/>
+            <div class="img-ph" style="display:none">📷<span>Foto principale</span></div>
+          </div>
+          <div class="chi-img-sm">
+            <img src="../images/interno/foto2.jpg" alt="Dettaglio"
+                 onerror="this.style.display='none';this.parentElement.querySelector('.img-ph').style.display='flex'"/>
+            <div class="img-ph" style="display:none">📷<span>Dettaglio</span></div>
+          </div>
+          <div class="chi-img-sm">
+            <img src="../images/esterno/foto1.jpg" alt="Esterno"
+                 onerror="this.style.display='none';this.parentElement.querySelector('.img-ph').style.display='flex'"/>
+            <div class="img-ph" style="display:none">📷<span>Esterno</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer id="footer"></footer>
+</div>
+
+<script src="../js/data.js"></script>
+<script src="../js/layout.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  buildLayout('chi-siamo');
+  document.getElementById('chi-desc').textContent = SDATA.ristorante.descrizione;
+});
+</script>
+</body>
+</html>
