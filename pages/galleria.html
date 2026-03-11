@@ -57,12 +57,13 @@
 <script>
 const MAX_FOTO = 50;
 
+const BASE = window.location.origin + '/locandaulivi/images/';
 const CARTELLE = {
-  interno: { label: 'Interno',  path: '../images/interno/' },
-  esterno: { label: 'Esterno',  path: '../images/esterno/' },
-  piatti:  { label: 'I Piatti', path: '../images/piatti/'  },
-  dolci:   { label: 'Dolci',    path: '../images/dolci/'   },
-  vini:    { label: 'I Vini',   path: '../images/vini/'    }
+  interno: { label: 'Interno',  path: BASE + 'interno/' },
+  esterno: { label: 'Esterno',  path: BASE + 'esterno/' },
+  piatti:  { label: 'I Piatti', path: BASE + 'piatti/'  },
+  dolci:   { label: 'Dolci',    path: BASE + 'dolci/'   },
+  vini:    { label: 'I Vini',   path: BASE + 'vini/'    }
 };
 
 document.addEventListener('DOMContentLoaded', () => {
