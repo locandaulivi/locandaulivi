@@ -112,7 +112,7 @@ input, select, textarea, button { font-family: 'Jost', sans-serif; }
 }
 .nav-logo { display: flex; align-items: center; gap: 0.65rem; }
 .nav-stemma {
-  height: 44px; width: 44px;
+  height: 80px; width: 80px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid var(--green-light);
