@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<!-- saved from url=(0044)file:///C:/Users/User/Downloads/prenota.html -->
+<html lang="it"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prenota – Locanda Ulivi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com/">
+  <link href="./Prenota – Locanda Ulivi_files/css2" rel="stylesheet">
+  <link rel="stylesheet" href="file:///C:/Users/User/css/style.css">
+</head>
+<body>
+<aside id="left-sidebar"></aside>
+<div id="page-content">
+  <nav id="navbar"></nav>
+
+  <section class="section section-cream" style="flex:1">
+    <div class="container">
+      <div class="prenota-wrap reveal">
+        <div class="prenota-info">
+          <span class="section-tag">Riserva il tuo posto</span>
+          <h2>Prenota <em>Online</em></h2>
+          <p>Compila il modulo e ti contatteremo per confermare la prenotazione entro poche ore.</p>
+          <div class="cstack">
+            <a href="tel:+390450000000" class="ci"><span>📞</span><span id="p-tel">+39 045 000 0000</span></a>
+            <a href="mailto:locandaulivi2026@gmail.com" class="ci"><span>✉️</span><span id="p-email">locandaulivi2026@gmail.com</span></a>
+            <div class="ci"><span>📍</span><span>Località Alpi 3, Cavaion Veronese (VR)</span></div>
+          </div>
+        </div>
+        <div class="form-box">
+          <form id="prenota-form" action="https://formspree.io/f/xgonkeqq" method="POST">
+            <div class="frow">
+              <div class="fg"><label>Nome e Cognome *</label><input type="text" name="nome" required="" placeholder="Mario Rossi"></div>
+              <div class="fg"><label>Telefono *</label><input type="tel" name="telefono" required="" placeholder="+39 333 0000000"></div>
+            </div>
+            <div class="frow">
+              <div class="fg"><label>Email</label><input type="email" name="email" placeholder="mario@email.it"></div>
+              <div class="fg"><label>N° Persone *</label>
+                <select name="persone" required="">
+                  <option value="">—</option>
+                  <option>1</option><option>2</option><option>3</option>
+                  <option>4</option><option>5</option><option>6</option><option>7</option><option>8+</option>
+                </select>
+              </div>
+            </div>
+            <div class="frow">
+              <div class="fg"><label>Data *</label><input type="date" name="data" required=""></div>
+              <div class="fg"><label>Orario *</label>
+                <select name="orario" required="">
+                  <option value="">—</option>
+                  <optgroup label="Pranzo"><option>12:00</option><option>12:30</option><option>13:00</option><option>13:30</option></optgroup>
+                  <optgroup label="Cena"><option>19:30</option><option>20:00</option><option>20:30</option><option>21:00</option></optgroup>
+                </select>
+              </div>
+            </div>
+            <div class="fg full">
+              <label>Tipo di servizio</label>
+              <select name="tipo">
+                <option value="normale">Pranzo / Cena normale</option>
+                <option value="lavoro">Pranzo di lavoro</option>
+                <option value="evento">Evento privato</option>
+              </select>
+            </div>
+            <div class="fg full">
+              <label>Note o richieste speciali</label>
+              <textarea name="note" rows="3" placeholder="Allergie, intolleranze, occasioni speciali…"></textarea>
+            </div>
+            <button type="submit" id="submit-btn" class="btn-primary" style="width:100%;text-align:center">Invia Prenotazione</button>
+          </form>
+          <div class="prenota-ok" id="prenota-ok" style="display:none">
+            <span>✅</span>
+            <h3>Prenotazione ricevuta!</h3>
+            <p>Ti contatteremo presto per confermare.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer id="footer"></footer>
+</div>
+
+<script src="file:///C:/Users/User/js/data.js"></script>
+<script src="file:///C:/Users/User/js/layout.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  buildLayout('prenota');
+  const r = SDATA.ristorante;
+  document.getElementById('p-tel').textContent   = r.telefono;
+  document.getElementById('p-tel').href          = 'tel:' + r.telefono.replace(/\s/g,'');
+  document.getElementById('p-email').textContent = r.email;
+
+  const dateInput = document.querySelector('input[type="date"]');
+  if (dateInput) dateInput.min = new Date().toISOString().split('T')[0];
+
+  document.getElementById('prenota-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const btn = document.getElementById('submit-btn');
+    btn.textContent = 'Invio in corso…';
+    btn.disabled = true;
+
+    try {
+      const response = await fetch('https://formspree.io/f/xgonkeqq', {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (response.ok) {
+        form.style.display = 'none';
+        document.getElementById('prenota-ok').style.display = 'flex';
+        setTimeout(() => {
+          form.reset();
+          form.style.display = 'block';
+          document.getElementById('prenota-ok').style.display = 'none';
+          btn.textContent = 'Invia Prenotazione';
+          btn.disabled = false;
+        }, 5000);
+      } else {
+        alert('Errore nell\'invio. Riprova o chiamaci direttamente.');
+        btn.textContent = 'Invia Prenotazione';
+        btn.disabled = false;
+      }
+    } catch(err) {
+      alert('Errore di connessione. Riprova o chiamaci direttamente.');
+      btn.textContent = 'Invia Prenotazione';
+      btn.disabled = false;
+    }
+  });
+});
+</script>
+
+
+</body></html>
